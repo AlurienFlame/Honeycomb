@@ -7,3 +7,8 @@ canvas {
     margin: auto;
     margin-top: 5vh;
 }
+button {
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+}
