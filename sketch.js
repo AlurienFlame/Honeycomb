@@ -6,17 +6,15 @@ let openHexes = [];
 let start;
 let end;
 let isPaused = true;
-// TODO: Pause, play, restart buttons
 // TODO: Use mouse to draw walls when paused
 
 function setup() {
     createCanvas(800, 600);
 
-    generateMap();
-    populateMap();
+    restart();
 
     // Buttons
-    // TODO: 🔄️ ⏪️ ⏩️ Placing start and stop
+
     // Play/Pause ▶️ ⏸️
     buttonPlayPause = createButton("▶️");
     buttonPlayPause.mousePressed(() => {
@@ -34,26 +32,33 @@ function setup() {
     buttonStep = createButton("⏭️");
     buttonStep.mousePressed(pathfindStep);
 
-    // Restart
+    // Restart 🔄️
     buttonRestart = createButton("🔄️");
-    buttonRestart.mousePressed(()=>{
-        grid.length = 0;
-        closedHexes.length = 0;
-        openHexes.length = 0;
-        generateMap();
-        populateMap();
-    })
+    buttonRestart.mousePressed(restart);
 
-    // Speed Up
-    // Slow Down
-    // frameRate(1);
-    
+    // Slow Down ⏪️
+    buttonSpeedDown = createButton("⏪️");
+    buttonSpeedDown.mousePressed(() => {
+        console.log(`Frame rate reduced to ${frameRate()}`);
+        frameRate(frameRate() - 5);
+    });
+
+    // Speed Up ⏩️
+    buttonSpeedUp = createButton("⏩️");
+    buttonSpeedUp.mousePressed(() => {
+        console.log(`Frame rate increased to ${frameRate()}`);
+        frameRate(frameRate() + 5);
+    });
+
+    // TODO: Placing start and stop
 }
 
 function draw() {
     if (!isPaused) {
         // Function returns true when goal is reached
-        pathfindStep();
+        if (pathfindStep()) {
+            noLoop();
+        }
     }
 
     background("orange");
@@ -71,6 +76,16 @@ function textCentered(msg, x, y) {
     text(msg, -(textWidth(msg) / 2) + x, -(textSize() / 2) + y, textWidth(msg), textSize());
 }
 
+function restart() {
+    grid.length = 0;
+    closedHexes.length = 0;
+    openHexes.length = 0;
+    explored = 0;
+    generateMap();
+    populateMap();
+    loop();
+}
+
 function generateMap() {
     for (let i = 0; i < 20; i++) {
         grid.push([]);
@@ -78,7 +93,8 @@ function generateMap() {
             // TODO: Less rhombus shaped grid
             let xOff = 70; // Horizontal distance between hexes
             let yOff = 60; // Vertical distance between hexes
-            let x = i * xOff + j * xOff - 4 * xOff;
+            let x = i * xOff + j * xOff - 5 * xOff;
+            // That 5 is how many hexes to the left the board is adjusted
             let y = j * yOff;
             // Offset for every other hex
             x -= xOff * 0.5 * j;
