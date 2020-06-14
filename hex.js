@@ -17,6 +17,31 @@ class Hex {
         this.state = EMPTY;
     }
 
+    onClick() {
+        switch (currentTool) {
+            case 0: // Walls
+                if (this.state == WALL) {
+                    this.state = EMPTY;
+                } else {
+                    this.state = WALL;
+                }
+                console.log(`Toggled wall at ${this.q}, ${this.r}, ${this.s}`)
+                break;
+            case 1: // Start
+                this.state = START;
+                start.state = EMPTY;
+                start = this;
+                console.log(`Moved End to ${this.q}, ${this.r}, ${this.s}`)
+                break;
+            case 2: // End
+                this.state = END;
+                end.state = EMPTY
+                end = this;
+                console.log(`Moved Start to ${this.q}, ${this.r}, ${this.s}`)
+                break;
+        }
+    }
+
     show() {
         push();
         translate(this.x, this.y);
@@ -95,7 +120,6 @@ class Hex {
             // Right diag
             grid[this.q - 1][this.r + 1],
             grid[this.q + 1][this.r - 1],
-
         ];
     }
 

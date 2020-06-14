@@ -6,6 +6,7 @@ let openHexes = [];
 let start;
 let end;
 let isPaused = true;
+let isFinished = false;
 let currentTool = 0; // 0: Wall, 1: Start, 2: End
 // TODO: Use mouse to draw walls when paused
 
@@ -78,11 +79,9 @@ function setup() {
 }
 
 function draw() {
-    if (!isPaused) {
+    if (!isPaused && !isFinished) {
         // Function returns true when goal is reached
-        if (pathfindStep()) {
-            noLoop();
-        }
+        pathfindStep();
     }
 
     background("orange");
@@ -97,9 +96,9 @@ function draw() {
 }
 
 function mouseReleased() {
+    if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) return;
     let [x, y] = pixelToGridCoords(mouseX, mouseY);
-    console.log(`Clicked on tile at ${x}, ${y}`);
-    // TODO: on click event for hex object
+    grid[x][y].onClick();
 }
 
 function gridToPixelCoords(gX, gY) {
@@ -126,13 +125,13 @@ function pixelToGridCoords(pX, pY) {
 
     let gY = pY;
     gY /= yOff; // Adjust scale
-    gY = Math.round(gY)
+    gY = Math.round(gY);
 
     let gX = pX;
-    gX /= xOff;  // Adjust scale
+    gX /= xOff; // Adjust scale
     gX -= globalXOff; // Adjust for global offset
     gX -= 0.5 * gY; // Reverse rhombification
-    gX = Math.round(gX)
+    gX = Math.round(gX);
 
     return [gX, gY];
 }
@@ -142,13 +141,14 @@ function textCentered(msg, x, y) {
 }
 
 function restart() {
+    isFinished = false;
     grid.length = 0;
     closedHexes.length = 0;
     openHexes.length = 0;
     explored = 0;
     generateMap();
     populateMap();
-    loop();
+    // FIXME: Restarting should not clear walls or move start and end.
 }
 
 function generateMap() {
@@ -229,7 +229,10 @@ function pathfindStep() {
     if (current.state == END) {
         current.tracePath();
         // Note that this includes tiles that have been updated multiple times.
-        console.log(`Found target after exploring ${explored} hexes.`);
+        if (!isFinished) {
+            alert(`Found target after exploring ${explored} hexes.`);
+            isFinished = true;
+        }
         return true;
     }
 
