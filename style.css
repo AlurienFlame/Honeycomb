@@ -12,10 +12,21 @@ button {
     display: inline-block;
     margin-top: 5px;
     font-size: xx-large;
+}
+.emoji-button {
     background: none;
     border: none;
     outline: none;
 }
-button::selection {
+.emoji-button::selection {
     background: none;
+}
+.tool-button {
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    outline: none;
+}
+.tool-button:focus {
+    background: grey;
 }

@@ -6,6 +6,7 @@ let openHexes = [];
 let start;
 let end;
 let isPaused = true;
+let currentTool = 0; // 0: Wall, 1: Start, 2: End
 // TODO: Use mouse to draw walls when paused
 
 function setup() {
@@ -17,6 +18,7 @@ function setup() {
 
     // Play/Pause ▶️ ⏸️
     buttonPlayPause = createButton("▶️");
+    buttonPlayPause.addClass("emoji-button");
     buttonPlayPause.mousePressed(() => {
         if (isPaused) {
             console.log("Unpaused.");
@@ -30,14 +32,17 @@ function setup() {
 
     // Step ⏭️
     buttonStep = createButton("⏭️");
+    buttonStep.addClass("emoji-button");
     buttonStep.mousePressed(pathfindStep);
 
     // Restart 🔄️
     buttonRestart = createButton("🔄️");
+    buttonRestart.addClass("emoji-button");
     buttonRestart.mousePressed(restart);
 
     // Slow Down ⏪️
     buttonSpeedDown = createButton("⏪️");
+    buttonSpeedDown.addClass("emoji-button");
     buttonSpeedDown.mousePressed(() => {
         console.log(`Frame rate reduced to ${frameRate()}`);
         frameRate(frameRate() - 5);
@@ -45,12 +50,30 @@ function setup() {
 
     // Speed Up ⏩️
     buttonSpeedUp = createButton("⏩️");
+    buttonSpeedUp.addClass("emoji-button");
     buttonSpeedUp.mousePressed(() => {
         console.log(`Frame rate increased to ${frameRate()}`);
         frameRate(frameRate() + 5);
     });
 
-    // TODO: Placing start and stop
+    // Tile Editing
+    buttonWall = createButton("Build Walls");
+    buttonWall.addClass("tool-button");
+    buttonWall.mousePressed(() => {
+        currentTool = 0; // Wall
+    });
+
+    buttonStart = createButton("Place Start");
+    buttonStart.addClass("tool-button");
+    buttonStart.mousePressed(() => {
+        currentTool = 1; // Start
+    });
+
+    buttonEnd = createButton("Place End");
+    buttonEnd.addClass("tool-button");
+    buttonEnd.mousePressed(() => {
+        currentTool = 2; // End
+    });
 }
 
 function draw() {
