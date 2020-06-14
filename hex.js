@@ -30,14 +30,19 @@ class Hex {
             case 1: // Start
                 this.state = START;
                 start.state = EMPTY;
+                openHexes = openHexes.filter((hex) => {
+                    return hex !== start;
+                });
                 start = this;
-                console.log(`Moved End to ${this.q}, ${this.r}, ${this.s}`);
+                this.update(start, end);
+                this.open();
+                console.log(`Moved Start to ${this.q}, ${this.r}, ${this.s}`);
                 break;
             case 2: // End
                 this.state = END;
                 end.state = EMPTY;
                 end = this;
-                console.log(`Moved Start to ${this.q}, ${this.r}, ${this.s}`);
+                console.log(`Moved End to ${this.q}, ${this.r}, ${this.s}`);
                 break;
         }
     }
@@ -124,6 +129,7 @@ class Hex {
     }
 
     tracePath() {
+        if (this.state == END) return;
         if (this.parent) {
             this.parent.state = PATH;
             if (this.parent.parent.state != START) this.parent.tracePath();

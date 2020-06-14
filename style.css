@@ -27,7 +27,6 @@ button {
     border: none;
     outline: none;
 }
-/* TODO: Don't use focus for this, make a "selected-button" class. */
-.tool-button:focus {
+.selected-tool-button {
     background: grey;
 }

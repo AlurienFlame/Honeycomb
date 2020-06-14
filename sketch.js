@@ -12,7 +12,6 @@ let end;
 let isPaused = true;
 let isFinished = false;
 let currentTool = 0; // 0: Wall, 1: Start, 2: End
-// TODO: Use mouse to draw walls when paused
 
 function setup() {
     createCanvas(800, 600);
@@ -63,21 +62,30 @@ function setup() {
     // Tile Editing
     buttonWall = createButton("Build Walls");
     buttonWall.addClass("tool-button");
-    buttonWall.elt.focus();
+    buttonWall.addClass("selected-tool-button");
     buttonWall.mousePressed(() => {
         currentTool = 0; // Wall
+        buttonWall.addClass("selected-tool-button");
+        buttonStart.removeClass("selected-tool-button");
+        buttonEnd.removeClass("selected-tool-button");
     });
 
     buttonStart = createButton("Move Start");
     buttonStart.addClass("tool-button");
     buttonStart.mousePressed(() => {
         currentTool = 1; // Start
+        buttonWall.removeClass("selected-tool-button");
+        buttonStart.addClass("selected-tool-button");
+        buttonEnd.removeClass("selected-tool-button");
     });
 
     buttonEnd = createButton("Move End");
     buttonEnd.addClass("tool-button");
     buttonEnd.mousePressed(() => {
         currentTool = 2; // End
+        buttonWall.removeClass("selected-tool-button");
+        buttonStart.removeClass("selected-tool-button");
+        buttonEnd.addClass("selected-tool-button");
     });
 }
 
@@ -181,6 +189,9 @@ function populateMap() {
 
 function pathfindStep() {
     // TODO: Optimize lowest cost determination
+    if (openHexes.length < 1) {
+        console.warn("No open hexes!");
+    }
     // Find lowest f_cost
     let cheapestFCost = Infinity;
     let cheapestHexes = [];
@@ -216,7 +227,8 @@ function pathfindStep() {
     // Check if finished
     if (current.state == END) {
         current.tracePath();
-        // Note that this includes tiles that have been updated multiple times.
+        // Note that this includes tiles that have been updated multiple times,
+        // as well as start and end
         if (!isFinished) {
             alert(`Found target after exploring ${explored} hexes.`);
             isFinished = true;
