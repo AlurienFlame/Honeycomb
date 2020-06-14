@@ -11,4 +11,11 @@ button {
     display: block;
     margin: auto;
     margin-top: 5px;
+    /* For this project specifically because the controls are emojis */
+    background: none;
+    border: none;
+    outline: none;
+}
+button::selection {
+    background: none;
 }

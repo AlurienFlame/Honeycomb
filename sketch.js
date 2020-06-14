@@ -17,13 +17,16 @@ function setup() {
     populateMap();
 
     // Buttons
-    pauseButton = createButton("Pause");
+    // TODO: 🔄️ ⏭️ ⏪️ ⏩️
+    pauseButton = createButton("⏸️");
+    console.log(pauseButton)
     pauseButton.mousePressed(() => {
         if (isPaused) {
             console.log("Unpaused.");
-            // TODO: Change button text
+            pauseButton.elt.innerText = "⏸️"
         } else {
             console.log("Paused.");
+            pauseButton.elt.innerText = "▶️"
         }
         isPaused = !isPaused;
     });
