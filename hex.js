@@ -25,7 +25,6 @@ class Hex {
                 } else {
                     this.state = WALL;
                 }
-                console.log(`Toggled wall at ${this.q}, ${this.r}, ${this.s}`);
                 break;
             case 1: // Start
                 this.state = START;
@@ -36,13 +35,11 @@ class Hex {
                 start = this;
                 this.update(start, end);
                 this.open();
-                console.log(`Moved Start to ${this.q}, ${this.r}, ${this.s}`);
                 break;
             case 2: // End
                 this.state = END;
                 end.state = EMPTY;
                 end = this;
-                console.log(`Moved End to ${this.q}, ${this.r}, ${this.s}`);
                 break;
         }
     }
@@ -113,19 +110,39 @@ class Hex {
     }
 
     getNeighbors() {
-        return [
-            // Horizontal
-            grid[this.q + 1][this.r + 0],
-            grid[this.q - 1][this.r + 0],
+        let neighbors = [];
 
-            // Left diag
-            grid[this.q + 0][this.r + 1],
-            grid[this.q + 0][this.r - 1],
+        // Check that column to the left exists
+        if (grid[this.q + 1] != null) {
+            neighbors.push(
+                ...[
+                    grid[this.q + 1][this.r + 0], // Right
+                    grid[this.q + 1][this.r - 1], // Top Right
+                ]
+            );
+        }
 
-            // Right diag
-            grid[this.q - 1][this.r + 1],
-            grid[this.q + 1][this.r - 1],
-        ];
+        // We already know this column exists
+        neighbors.push(
+            ...[
+                grid[this.q + 0][this.r + 1], // Bot Right
+                grid[this.q + 0][this.r - 1], // Top Left
+            ]
+        );
+
+        // Check that column to the right exists
+        if (grid[this.q - 1] != null) {
+            neighbors.push(
+                ...[
+                    grid[this.q - 1][this.r + 0], // Left
+                    grid[this.q - 1][this.r + 1], // Bot Left
+                ]
+            );
+        }
+
+        // Remove undefineds
+        neighbors = neighbors.filter(Boolean);
+        return neighbors;
     }
 
     tracePath() {

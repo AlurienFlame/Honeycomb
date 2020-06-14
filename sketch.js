@@ -176,8 +176,6 @@ function generateMap() {
 }
 
 function populateMap() {
-    // Place start and end points
-
     start = grid[5][2];
     start.state = START;
     end = grid[11][8];
@@ -190,7 +188,9 @@ function populateMap() {
 function pathfindStep() {
     // TODO: Optimize lowest cost determination
     if (openHexes.length < 1) {
-        console.warn("No open hexes!");
+        console.log(`Ran out of hexes to explore after exploring ${explored} hexes.`);
+        isFinished = true;
+        return;
     }
     // Find lowest f_cost
     let cheapestFCost = Infinity;
@@ -229,11 +229,9 @@ function pathfindStep() {
         current.tracePath();
         // Note that this includes tiles that have been updated multiple times,
         // as well as start and end
-        if (!isFinished) {
-            alert(`Found target after exploring ${explored} hexes.`);
-            isFinished = true;
-        }
-        return true;
+        alert(`Found target after exploring ${explored} hexes.`);
+        isFinished = true;
+        return;
     }
 
     current.close();
