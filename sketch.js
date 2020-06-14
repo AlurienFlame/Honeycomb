@@ -59,17 +59,18 @@ function setup() {
     // Tile Editing
     buttonWall = createButton("Build Walls");
     buttonWall.addClass("tool-button");
+    buttonWall.elt.focus();
     buttonWall.mousePressed(() => {
         currentTool = 0; // Wall
     });
 
-    buttonStart = createButton("Place Start");
+    buttonStart = createButton("Move Start");
     buttonStart.addClass("tool-button");
     buttonStart.mousePressed(() => {
         currentTool = 1; // Start
     });
 
-    buttonEnd = createButton("Place End");
+    buttonEnd = createButton("Move End");
     buttonEnd.addClass("tool-button");
     buttonEnd.mousePressed(() => {
         currentTool = 2; // End
@@ -95,6 +96,47 @@ function draw() {
     }
 }
 
+function mouseReleased() {
+    let [x, y] = pixelToGridCoords(mouseX, mouseY);
+    console.log(`Clicked on tile at ${x}, ${y}`);
+    // TODO: on click event for hex object
+}
+
+function gridToPixelCoords(gX, gY) {
+    // Distances between hexes in pixels
+    let xOff = 70;
+    let yOff = 60;
+    let globalXOff = -5; // move board 5 hexes left
+
+    let pX = gX;
+    pX += 0.5 * gY; // Offset for every other hex - this is causing the rhombus shape
+    pX += globalXOff; // move board 5 hexes left to counteract the rhombus
+    pX *= xOff; // Adjust scale
+
+    let pY = gY;
+    pY *= yOff; // Adjust scale
+    return [pX, pY];
+}
+
+function pixelToGridCoords(pX, pY) {
+    // Distances between hexes in pixels
+    let xOff = 70;
+    let yOff = 60;
+    let globalXOff = -5; // move board 5 hexes left
+
+    let gY = pY;
+    gY /= yOff; // Adjust scale
+    gY = Math.round(gY)
+
+    let gX = pX;
+    gX /= xOff;  // Adjust scale
+    gX -= globalXOff; // Adjust for global offset
+    gX -= 0.5 * gY; // Reverse rhombification
+    gX = Math.round(gX)
+
+    return [gX, gY];
+}
+
 function textCentered(msg, x, y) {
     text(msg, -(textWidth(msg) / 2) + x, -(textSize() / 2) + y, textWidth(msg), textSize());
 }
@@ -114,13 +156,7 @@ function generateMap() {
         grid.push([]);
         for (let j = 0; j < 11; j++) {
             // TODO: Less rhombus shaped grid
-            let xOff = 70; // Horizontal distance between hexes
-            let yOff = 60; // Vertical distance between hexes
-            let x = i * xOff + j * xOff - 5 * xOff;
-            // That 5 is how many hexes to the left the board is adjusted
-            let y = j * yOff;
-            // Offset for every other hex
-            x -= xOff * 0.5 * j;
+            [x, y] = gridToPixelCoords(i, j);
 
             grid[i].push(new Hex(x, y, i, j));
         }
