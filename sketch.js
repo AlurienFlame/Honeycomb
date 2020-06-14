@@ -1,5 +1,9 @@
 const grid = [];
-const zoom = 0.25;
+const zoom = 0.25; // Default 0.25
+const globalXOff = -5; // Move board 5 hexes left
+// Distances between hexes in pixels
+const xOff = 280 * zoom;
+const yOff = 240 * zoom;
 let explored = 0;
 let closedHexes = [];
 let openHexes = [];
@@ -13,7 +17,8 @@ let currentTool = 0; // 0: Wall, 1: Start, 2: End
 function setup() {
     createCanvas(800, 600);
 
-    restart();
+    generateMap();
+    populateMap();
 
     // Buttons
 
@@ -22,10 +27,8 @@ function setup() {
     buttonPlayPause.addClass("emoji-button");
     buttonPlayPause.mousePressed(() => {
         if (isPaused) {
-            console.log("Unpaused.");
             buttonPlayPause.elt.innerText = "⏸️";
         } else {
-            console.log("Paused.");
             buttonPlayPause.elt.innerText = "▶️";
         }
         isPaused = !isPaused;
@@ -102,11 +105,6 @@ function mouseReleased() {
 }
 
 function gridToPixelCoords(gX, gY) {
-    // Distances between hexes in pixels
-    let xOff = 70;
-    let yOff = 60;
-    let globalXOff = -5; // move board 5 hexes left
-
     let pX = gX;
     pX += 0.5 * gY; // Offset for every other hex - this is causing the rhombus shape
     pX += globalXOff; // move board 5 hexes left to counteract the rhombus
@@ -118,11 +116,6 @@ function gridToPixelCoords(gX, gY) {
 }
 
 function pixelToGridCoords(pX, pY) {
-    // Distances between hexes in pixels
-    let xOff = 70;
-    let yOff = 60;
-    let globalXOff = -5; // move board 5 hexes left
-
     let gY = pY;
     gY /= yOff; // Adjust scale
     gY = Math.round(gY);
@@ -141,23 +134,34 @@ function textCentered(msg, x, y) {
 }
 
 function restart() {
+    // Reset data
     isFinished = false;
-    grid.length = 0;
     closedHexes.length = 0;
     openHexes.length = 0;
     explored = 0;
-    generateMap();
-    populateMap();
-    // FIXME: Restarting should not clear walls or move start and end.
+
+    // Clear grid
+    let statesToClear = [OPEN, CLOSED, PATH];
+    for (row of grid) {
+        for (hex of row) {
+            if (statesToClear.includes(hex.state)) {
+                hex.state = EMPTY;
+                hex.g_cost = undefined;
+                hex.h_cost = undefined;
+                hex.f_cost = undefined;
+            }
+        }
+    }
+
+    // Start over
+    start.open();
 }
 
 function generateMap() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 17; i++) {
         grid.push([]);
         for (let j = 0; j < 11; j++) {
-            // TODO: Less rhombus shaped grid
             [x, y] = gridToPixelCoords(i, j);
-
             grid[i].push(new Hex(x, y, i, j));
         }
     }
@@ -165,26 +169,10 @@ function generateMap() {
 
 function populateMap() {
     // Place start and end points
-    // grid[6][7].state = WALL;
-    // grid[6][6].state = WALL;
-    // grid[6][5].state = WALL;
-    // grid[6][4].state = WALL;
-    // grid[6][3].state = WALL;
-    // grid[6][2].state = WALL;
 
-    // grid[7][9].state = WALL;
-    // grid[8][8].state = WALL;
-    // grid[9][7].state = WALL;
-    // grid[10][6].state = WALL;
-
-    // grid[10][5].state = WALL;
-    // grid[10][4].state = WALL;
-    // grid[10][3].state = WALL;
-    // grid[10][2].state = WALL;
-
-    start = grid[4][5];
+    start = grid[5][2];
     start.state = START;
-    end = grid[12][5];
+    end = grid[11][8];
     end.state = END;
 
     start.update(start, end);

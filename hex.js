@@ -25,19 +25,19 @@ class Hex {
                 } else {
                     this.state = WALL;
                 }
-                console.log(`Toggled wall at ${this.q}, ${this.r}, ${this.s}`)
+                console.log(`Toggled wall at ${this.q}, ${this.r}, ${this.s}`);
                 break;
             case 1: // Start
                 this.state = START;
                 start.state = EMPTY;
                 start = this;
-                console.log(`Moved End to ${this.q}, ${this.r}, ${this.s}`)
+                console.log(`Moved End to ${this.q}, ${this.r}, ${this.s}`);
                 break;
             case 2: // End
                 this.state = END;
-                end.state = EMPTY
+                end.state = EMPTY;
                 end = this;
-                console.log(`Moved Start to ${this.q}, ${this.r}, ${this.s}`)
+                console.log(`Moved Start to ${this.q}, ${this.r}, ${this.s}`);
                 break;
         }
     }
