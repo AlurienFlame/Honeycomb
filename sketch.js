@@ -5,39 +5,55 @@ let closedHexes = [];
 let openHexes = [];
 let start;
 let end;
-let isPaused = false;
+let isPaused = true;
 // TODO: Pause, play, restart buttons
 // TODO: Use mouse to draw walls when paused
 
 function setup() {
-    // frameRate(1);
     createCanvas(800, 600);
 
     generateMap();
     populateMap();
 
     // Buttons
-    // TODO: 🔄️ ⏭️ ⏪️ ⏩️
-    pauseButton = createButton("⏸️");
-    console.log(pauseButton)
-    pauseButton.mousePressed(() => {
+    // TODO: 🔄️ ⏪️ ⏩️ Placing start and stop
+    // Play/Pause ▶️ ⏸️
+    buttonPlayPause = createButton("▶️");
+    buttonPlayPause.mousePressed(() => {
         if (isPaused) {
             console.log("Unpaused.");
-            pauseButton.elt.innerText = "⏸️"
+            buttonPlayPause.elt.innerText = "⏸️";
         } else {
             console.log("Paused.");
-            pauseButton.elt.innerText = "▶️"
+            buttonPlayPause.elt.innerText = "▶️";
         }
         isPaused = !isPaused;
     });
+
+    // Step ⏭️
+    buttonStep = createButton("⏭️");
+    buttonStep.mousePressed(pathfindStep);
+
+    // Restart
+    buttonRestart = createButton("🔄️");
+    buttonRestart.mousePressed(()=>{
+        grid.length = 0;
+        closedHexes.length = 0;
+        openHexes.length = 0;
+        generateMap();
+        populateMap();
+    })
+
+    // Speed Up
+    // Slow Down
+    // frameRate(1);
+    
 }
 
 function draw() {
     if (!isPaused) {
         // Function returns true when goal is reached
-        if (pathfindStep()) {
-            noLoop();
-        }
+        pathfindStep();
     }
 
     background("orange");

@@ -1,6 +1,7 @@
 body {
     margin: 0;
     background: hsl(0, 0%, 15%);
+    text-align: center;
 }
 canvas {
     display: block;
@@ -8,10 +9,9 @@ canvas {
     margin-top: 5vh;
 }
 button {
-    display: block;
-    margin: auto;
+    display: inline-block;
     margin-top: 5px;
-    /* For this project specifically because the controls are emojis */
+    font-size: xx-large;
     background: none;
     border: none;
     outline: none;
