@@ -8,6 +8,11 @@ const WALL = 6;
 
 class Hex {
     constructor(x, y, q, r) {
+        // Defining costs here so they show up first
+        // when I debug.log the object
+        this.f_cost = undefined;
+        this.h_cost = undefined;
+        this.g_cost = undefined;
         this.x = x; // Pixel x
         this.y = y; // Pixel y
         this.q = q; // Grid column
@@ -75,16 +80,18 @@ class Hex {
         vertex(0, -150);
         endShape(CLOSE);
 
-        // Text
-        fill("black");
-        strokeWeight(1);
+        pop();
+    }
+
+    showStats() {
+        push();
+        translate(this.x, this.y);
+        scale(zoom);
 
         // Co-ordinates
-        textSize(40);
         textCentered(`${this.q}, ${this.r}, ${this.s}`, 0, 80); // Whitespace is using custom character
 
         // Label
-        textSize(50);
         if (this.state == START) {
             textCentered("Start", 0, 0);
         } else if (this.state == END) {
@@ -101,10 +108,6 @@ class Hex {
         if (this.f_cost != "undefined") {
             textCentered(this.f_cost, 0, -80);
         }
-
-        // Center
-        // fill("red");
-        // ellipse(0, 0, 10);
 
         pop();
     }

@@ -91,7 +91,6 @@ function setup() {
 
 function draw() {
     if (!isPaused && !isFinished) {
-        // Function returns true when goal is reached
         pathfindStep();
     }
 
@@ -102,6 +101,14 @@ function draw() {
     for (col of grid) {
         for (hex of col) {
             hex.show();
+        }
+    }
+    fill("black");
+    strokeWeight(1);
+    textSize(40);
+    for (col of grid) {
+        for (hex of col) {
+            hex.showStats();
         }
     }
 }
@@ -186,43 +193,16 @@ function populateMap() {
 }
 
 function pathfindStep() {
-    // TODO: Optimize lowest cost determination
+    // Benchmarked at 0.165 to 0.035
+
     if (openHexes.length < 1) {
         console.log(`Ran out of hexes to explore after exploring ${explored} hexes.`);
         isFinished = true;
         return;
     }
-    // Find lowest f_cost
-    let cheapestFCost = Infinity;
-    let cheapestHexes = [];
-    for (hex of openHexes) {
-        if (hex.f_cost < cheapestFCost) {
-            cheapestFCost = hex.f_cost;
-            cheapestHexes = [];
-            cheapestHexes.push(hex);
-        } else if (hex.f_cost == cheapestFCost) {
-            cheapestHexes.push(hex);
-        }
-    }
 
-    // Find lowest h_cost, if necessary
-    if (cheapestHexes.length > 1) {
-        let cheapestHCost = Infinity;
-        let realCheapestHexes = [];
-        for (hex of cheapestHexes) {
-            if (hex.h_cost < cheapestHCost) {
-                cheapestHCost = hex.h_cost;
-                realCheapestHexes = [];
-                realCheapestHexes.push(hex);
-            } else if (hex.h_cost == cheapestHCost) {
-                realCheapestHexes.push(hex);
-            }
-        }
-
-        current = realCheapestHexes[0];
-    } else {
-        current = cheapestHexes[0];
-    }
+    // Sort array by f_cost, and by h_cost for hexes with equal f_cost
+    let current = openHexes.sort((a, b) => (a.f_cost == b.f_cost ? a.h_cost - b.h_cost : a.f_cost - b.f_cost))[0];
 
     // Check if finished
     if (current.state == END) {
