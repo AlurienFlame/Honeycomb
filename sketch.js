@@ -33,6 +33,7 @@ function setup() {
         isPaused = !isPaused;
     });
 
+    // TODO: Button hover text / tooltip
     // Step ⏭️
     buttonStep = createButton("⏭️");
     buttonStep.addClass("emoji-button");
@@ -43,6 +44,8 @@ function setup() {
     buttonRestart.addClass("emoji-button");
     buttonRestart.mousePressed(restart);
 
+
+    // TODO: Rework speed changing to be more sane
     // Slow Down ⏪️
     buttonSpeedDown = createButton("⏪️");
     buttonSpeedDown.addClass("emoji-button");
@@ -209,6 +212,7 @@ function pathfindStep() {
         current.tracePath();
         // Note that this includes tiles that have been updated multiple times,
         // as well as start and end
+        // TODO: Find a way to give textual feedback without freezing the whole window
         alert(`Found target after exploring ${explored} hexes.`);
         isFinished = true;
         return;
