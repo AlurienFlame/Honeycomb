@@ -15,6 +15,7 @@ let currentTool = 0; // 0: Wall, 1: Start, 2: End
 // Popup
 let message = "";
 let popupVisible = false;
+let popupY;
 
 function setup() {
     createCanvas(800, 600);
@@ -125,7 +126,11 @@ function draw() {
         let popupHeight = height * 0.1;
         let popupWidth = textWidth(message) * 0.75;
         let popupX = width * 0.5 - popupWidth * 0.5;
-        let popupY = height * 0.86;
+        let popupYFinal = height * 0.86;
+
+        if (popupY > popupYFinal) {
+            popupY-= 10;
+        }
 
         fill(color(255, 255, 255, 220));
         rect(popupX, popupY, popupWidth, popupHeight, 20);
@@ -260,6 +265,7 @@ function pathfindStep() {
 
 function popup(txt) {
     message = txt;
+    popupY = height * 1.1;
     popupVisible = true;
     setTimeout(() => {
         popupVisible = false;
