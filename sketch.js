@@ -12,6 +12,9 @@ let end;
 let isPaused = true;
 let isFinished = false;
 let currentTool = 0; // 0: Wall, 1: Start, 2: End
+// Popup
+let message = "";
+let popupVisible = false;
 
 function setup() {
     createCanvas(800, 600);
@@ -43,7 +46,6 @@ function setup() {
     buttonRestart = createButton("🔄️");
     buttonRestart.addClass("emoji-button");
     buttonRestart.mousePressed(restart);
-
 
     // TODO: Rework speed changing to be more sane
     // Slow Down ⏪️
@@ -98,14 +100,17 @@ function draw() {
     }
 
     background("orange");
+
+    // Hexes
     stroke("black");
     strokeWeight(5);
-
     for (col of grid) {
         for (hex of col) {
             hex.show();
         }
     }
+
+    // Numbers
     fill("black");
     strokeWeight(1);
     textSize(40);
@@ -113,6 +118,22 @@ function draw() {
         for (hex of col) {
             hex.showStats();
         }
+    }
+
+    // Popup
+    if (popupVisible) {
+        let popupHeight = height * 0.1;
+        let popupWidth = textWidth(message) * 0.75;
+        let popupX = width * 0.5 - popupWidth * 0.5;
+        let popupY = height * 0.86;
+
+        fill(color(255, 255, 255, 220));
+        rect(popupX, popupY, popupWidth, popupHeight, 20);
+
+        fill("black");
+        textSize(20);
+        noStroke();
+        text(message, width * 0.5 - textWidth(message) * 0.5, popupY + textSize() * 1.25);
     }
 }
 
@@ -148,7 +169,7 @@ function pixelToGridCoords(pX, pY) {
 }
 
 function textCentered(msg, x, y) {
-    text(msg, -(textWidth(msg) / 2) + x, -(textSize() / 2) + y, textWidth(msg), textSize());
+    text(msg, -(textWidth(msg) / 2) + x, -(textSize() / 2) + y, textWidth(msg));
 }
 
 function restart() {
@@ -212,8 +233,7 @@ function pathfindStep() {
         current.tracePath();
         // Note that this includes tiles that have been updated multiple times,
         // as well as start and end
-        // TODO: Find a way to give textual feedback without freezing the whole window
-        alert(`Found target after exploring ${explored} hexes.`);
+        popup(`Found target after exploring ${explored} hexes.`);
         isFinished = true;
         return;
     }
@@ -236,4 +256,12 @@ function pathfindStep() {
             // console.log(`${current.q}, ${current.r} just opened ${neighbor.q}, ${neighbor.r}`)
         }
     }
+}
+
+function popup(txt) {
+    message = txt;
+    popupVisible = true;
+    setTimeout(() => {
+        popupVisible = false;
+    }, 2000);
 }
