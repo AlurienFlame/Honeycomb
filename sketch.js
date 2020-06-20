@@ -25,8 +25,8 @@ let speed = 3;
 let stepDelays = {
     1: 500,
     2: 250,
-    3: 0
-}
+    3: 0,
+};
 
 function setup() {
     createCanvas(800, 600);
@@ -38,29 +38,34 @@ function setup() {
 
     // Play/Pause ▶️ ⏸️
     buttonPlayPause = createButton("▶️");
+    buttonPlayPause.attribute("title", "Play");
     buttonPlayPause.addClass("emoji-button");
     buttonPlayPause.mousePressed(() => {
         if (isPaused) {
             buttonPlayPause.elt.innerText = "⏸️";
+            buttonPlayPause.attribute("title", "Pause");
         } else {
             buttonPlayPause.elt.innerText = "▶️";
+            buttonPlayPause.attribute("title", "Play");
         }
         isPaused = !isPaused;
     });
 
-    // TODO: Button hover text / tooltip
     // Step ⏭️
     buttonStep = createButton("⏭️");
+    buttonStep.attribute("title", "Step");
     buttonStep.addClass("emoji-button");
     buttonStep.mousePressed(pathfindStep);
 
     // Restart 🔄️
     buttonRestart = createButton("🔄️");
+    buttonRestart.attribute("title", "Restart");
     buttonRestart.addClass("emoji-button");
     buttonRestart.mousePressed(restart);
 
     // Slow Down ⏪️
     buttonSpeedDown = createButton("⏪️");
+    buttonSpeedDown.attribute("title", "Speed down");
     buttonSpeedDown.addClass("emoji-button");
     buttonSpeedDown.mousePressed(() => {
         if (speed > 1) speed--;
@@ -69,6 +74,7 @@ function setup() {
 
     // Speed Up ⏩️
     buttonSpeedUp = createButton("⏩️");
+    buttonSpeedUp.attribute("title", "Speed up");
     buttonSpeedUp.addClass("emoji-button");
     buttonSpeedUp.mousePressed(() => {
         if (speed < 3) speed++;
@@ -280,7 +286,6 @@ function pathfindStep() {
         }
 
         neighbor.update(start, end);
-        // TODO: something about updating hex distances, check reference code
         if (!openHexes.includes(neighbor)) {
             neighbor.parent = current;
             explored++;
