@@ -256,6 +256,8 @@ function populateMap() {
 
 function pathfindStep() {
     // Benchmarked at 0.165 to 0.035
+    // FIXME: Technically this is just greedy best-first search due to
+    // a limited distance calculation algorithm
 
     if (openHexes.length < 1) {
         popup(`Ran out of hexes to explore after exploring ${explored} hexes.`);
