@@ -157,7 +157,7 @@ class Hex {
     }
 
     tracePath() {
-        if (this.state == END) return;
+        if (this.state == START) return;
         if (this.parent) {
             this.parent.state = PATH;
             if (this.parent.parent.state != START) this.parent.tracePath();
