@@ -61,6 +61,8 @@ class Hex {
         scale(zoom);
 
         if (this.state == EMPTY) {
+            // TODO: Figure out why this is more
+            // saturated on firefox than chrome
             fill("yellow");
         } else if (this.state == START) {
             fill("white");
