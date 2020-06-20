@@ -4,7 +4,7 @@
 Use interactive tools to place obstacles or build mazes on a hexagonal grid, then press play and watch the algorithm explore.
 Slow down time to get a closer look at what's happening, or even step through the process frame by frame.
 
-[Live demo](https://honeycomb.glitch.me/)
+[Live demo](https://honeycomb.glitch.me/)  
 [Source code](https://github.com/AlurienFlame/honeycomb)
 
 #### What do the numbers mean?
