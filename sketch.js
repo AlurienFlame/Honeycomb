@@ -13,9 +13,12 @@ let isPaused = true;
 let isFinished = false;
 let currentTool = 0; // 0: Wall, 1: Start, 2: End
 // Popup
+const defaultPopupAlpha = 220;
+const popupDuration = 2000;
+let popupLifetime = 0;
 let message = "";
-let popupVisible = false;
 let popupY;
+let popupAlpha;
 
 function setup() {
     createCanvas(800, 600);
@@ -53,7 +56,7 @@ function setup() {
     buttonSpeedDown = createButton("⏪️");
     buttonSpeedDown.addClass("emoji-button");
     buttonSpeedDown.mousePressed(() => {
-        console.log(`Frame rate reduced to ${frameRate()}`);
+        popup(`Frame rate reduced to ${frameRate()}`);
         frameRate(frameRate() - 5);
     });
 
@@ -61,7 +64,7 @@ function setup() {
     buttonSpeedUp = createButton("⏩️");
     buttonSpeedUp.addClass("emoji-button");
     buttonSpeedUp.mousePressed(() => {
-        console.log(`Frame rate increased to ${frameRate()}`);
+        popup(`Frame rate increased to ${frameRate()}`);
         frameRate(frameRate() + 5);
     });
 
@@ -122,20 +125,35 @@ function draw() {
     }
 
     // Popup
-    if (popupVisible) {
+    if (popupLifetime) {
+        // Timing out
+        if (popupLifetime > 0) {
+            popupLifetime -= deltaTime;
+        } else {
+            popupLifetime = 0;
+        }
+
+        // Fade out
+        if (popupLifetime < popupDuration * 0.25) {
+            popupAlpha -= 5;
+        }
+
+        // Coords
         let popupHeight = height * 0.1;
         let popupWidth = textWidth(message) * 0.75;
         let popupX = width * 0.5 - popupWidth * 0.5;
         let popupYFinal = height * 0.86;
 
-        if (popupY > popupYFinal) {
-            popupY-= 10;
-        }
+        // Slide up onto the screen
+        if (popupY > popupYFinal) popupY -= 10;
 
-        fill(color(255, 255, 255, 220));
+        // Background
+        fill(color(255, 255, 255, popupAlpha));
+        stroke(color(0, 0, 0, popupAlpha));
         rect(popupX, popupY, popupWidth, popupHeight, 20);
 
-        fill("black");
+        // Text
+        fill(color(0, 0, 0, popupAlpha));
         textSize(20);
         noStroke();
         text(message, width * 0.5 - textWidth(message) * 0.5, popupY + textSize() * 1.25);
@@ -225,7 +243,7 @@ function pathfindStep() {
     // Benchmarked at 0.165 to 0.035
 
     if (openHexes.length < 1) {
-        console.log(`Ran out of hexes to explore after exploring ${explored} hexes.`);
+        popup(`Ran out of hexes to explore after exploring ${explored} hexes.`);
         isFinished = true;
         return;
     }
@@ -265,9 +283,7 @@ function pathfindStep() {
 
 function popup(txt) {
     message = txt;
-    popupY = height * 1.1;
-    popupVisible = true;
-    setTimeout(() => {
-        popupVisible = false;
-    }, 2000);
+    popupY = height * 1.1; // The 0.1 comes from the popup's height
+    popupLifetime = popupDuration;
+    popupAlpha = defaultPopupAlpha;
 }
