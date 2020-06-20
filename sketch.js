@@ -19,6 +19,14 @@ let popupLifetime = 0;
 let message = "";
 let popupY;
 let popupAlpha;
+// Timing
+let msSinceLastStep = 0;
+let speed = 3;
+let stepDelays = {
+    1: 500,
+    2: 250,
+    3: 0
+}
 
 function setup() {
     createCanvas(800, 600);
@@ -51,21 +59,20 @@ function setup() {
     buttonRestart.addClass("emoji-button");
     buttonRestart.mousePressed(restart);
 
-    // TODO: Rework speed changing to be more sane
     // Slow Down ⏪️
     buttonSpeedDown = createButton("⏪️");
     buttonSpeedDown.addClass("emoji-button");
     buttonSpeedDown.mousePressed(() => {
-        popup(`Frame rate reduced to ${frameRate()}`);
-        frameRate(frameRate() - 5);
+        if (speed > 1) speed--;
+        popup(`Speed set to ${speed}`);
     });
 
     // Speed Up ⏩️
     buttonSpeedUp = createButton("⏩️");
     buttonSpeedUp.addClass("emoji-button");
     buttonSpeedUp.mousePressed(() => {
-        popup(`Frame rate increased to ${frameRate()}`);
-        frameRate(frameRate() + 5);
+        if (speed < 3) speed++;
+        popup(`Speed set to ${speed}`);
     });
 
     // Tile Editing
@@ -99,8 +106,10 @@ function setup() {
 }
 
 function draw() {
-    if (!isPaused && !isFinished) {
+    msSinceLastStep += deltaTime;
+    if (!isPaused && !isFinished && msSinceLastStep > stepDelays[speed]) {
         pathfindStep();
+        msSinceLastStep = 0;
     }
 
     background("orange");
