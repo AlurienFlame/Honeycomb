@@ -34,6 +34,9 @@ class Hex {
             case 1: // Start
                 this.state = START;
                 start.state = EMPTY;
+                start.f_cost = undefined;
+                start.h_cost = undefined;
+                start.g_cost = undefined;
                 openHexes = openHexes.filter((hex) => {
                     return hex !== start;
                 });
@@ -44,6 +47,9 @@ class Hex {
             case 2: // End
                 this.state = END;
                 end.state = EMPTY;
+                end.f_cost = undefined;
+                end.h_cost = undefined;
+                end.g_cost = undefined;
                 end = this;
                 break;
         }
