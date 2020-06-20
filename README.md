@@ -10,15 +10,19 @@ Slow down time to get a closer look at what's happening, or even step through th
 #### What do the numbers mean?
 The bottom three numbers are cubic co-ordinates representing the hex's position in two dimensional space.
 
-Bottom left: X
-Bottom middle: Y
-Bottom right: Z
+* Bottom left: X
+
+* Bottom middle: Y
+
+* Bottom right: Z
 
 The top three numbers are the values assigned to the hex by the algorithm.
 
-Top left: g-cost - Distance to start
-Top right: h-cost - Distance to end
-Top middle: f-cost -  Sum of both distances
+* Top left: g-cost - Distance to start
+
+* Top right: h-cost - Distance to end
+
+* Top middle: f-cost -  Sum of both distances
 
 #### What do the buttons do?
 
