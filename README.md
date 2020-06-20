@@ -1,4 +1,5 @@
-# A\* Pathfinding in a hexagonal grid
+# Honeycomb
+#### A\* Pathfinding in a hexagonal grid
 
 Use interactive tools to place obstacles or build mazes on a hexagonal grid, then press play and watch the algorithm explore.
 Slow down time to get a closer look at what's happening, or even step through the process frame by frame.
